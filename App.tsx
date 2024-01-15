@@ -16,7 +16,8 @@ import { Image } from 'react-native';
 
 const InsideStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-function InsideLayout() {
+function InsideLayout({route}:any) {
+  const user = route.params.user;
   return (
     <>
     <Appbar.Header>
@@ -26,19 +27,20 @@ function InsideLayout() {
         />
     </Appbar.Header>
     <InsideStack.Navigator>
-      <InsideStack.Screen name="List" component={List} options={{headerShown:false}}/>
-      <InsideStack.Screen name="Details" component={Details} />
+      <InsideStack.Screen name="List" component={List} initialParams={{user: user}} options={{headerShown:false}}/>
+      <InsideStack.Screen name="Details" component={Details} options={{headerShown:false}}/>
     </InsideStack.Navigator></>
   );
 }
 
-function TabLayout() {
+function TabLayout({route}:any) {
+  const user = route.params.user;
   return (
     <Tab.Navigator
       initialRouteName='Home'
       screenOptions={{headerShown : false}}
     >
-      <Tab.Screen name="Home" component={InsideLayout}  
+      <Tab.Screen name="Home" component={InsideLayout}  initialParams={{user:user}}
       options={{title:'Home', tabBarIcon: ({focused, color, size}) => (
         <Ionicons name="home" size={size} color={color} />
       )}}
@@ -64,7 +66,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Login' screenOptions={{headerShown:false}}>
-        {user ? <Stack.Screen name="Home" component={TabLayout} options={{headerShown : false}}/> 
+        {user ? <Stack.Screen name="Home" component={TabLayout} initialParams={{user:user}} options={{headerShown : false}}/> 
         : <Stack.Screen name="Login" component={Login} options={{headerShown : false}}/>}
 
       </Stack.Navigator>
