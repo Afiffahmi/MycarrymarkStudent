@@ -37,12 +37,11 @@ const List = ({navigation}: RouterProps) => {
   data={data}
   keyExtractor={({ id }, index) => id}
   renderItem={({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('Details', { item })}>
-    <Card style={{margin: 10}}>
+    <Card style={{margin: 15}}>
       <Card.Cover source={{ uri: item.selectedImage }} />
-      <Card.Title title={item.courseCode} subtitle={item.courseName}/>
+      <Card.Title title={item.courseCode} subtitle={item.courseName} titleVariant='titleMedium'/>
       <Card.Content>
-        <Text>{item.groupClass}</Text>
+        <Text >{item.groupClass}</Text>
         <Text>{item.lecturers[0].email}</Text>
       </Card.Content>
       
@@ -50,7 +49,7 @@ const List = ({navigation}: RouterProps) => {
         <Button onPress={() => navigation.navigate('Details',{item})} title='Open Details'/>
       </Card.Actions>
     </Card>
-    </TouchableOpacity>
+
   )}
 />
     </View>

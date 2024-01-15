@@ -9,16 +9,26 @@ import { FIREBASE_AUTH } from './FirebaseConfig';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Profile from './app/screens/Profile';
 import { Ionicons } from '@expo/vector-icons';
+import { Appbar } from 'react-native-paper';
+import { Image } from 'react-native';
+
 
 
 const InsideStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 function InsideLayout() {
   return (
+    <>
+    <Appbar.Header>
+    <Appbar.Content 
+          title={<Image source={require('./assets/logo.png')} style={{ width: 150, height: 80 }} />} 
+          style={{alignItems: 'center'}}
+        />
+    </Appbar.Header>
     <InsideStack.Navigator>
-      <InsideStack.Screen name="List" component={List} />
+      <InsideStack.Screen name="List" component={List} options={{headerShown:false}}/>
       <InsideStack.Screen name="Details" component={Details} />
-    </InsideStack.Navigator>
+    </InsideStack.Navigator></>
   );
 }
 
