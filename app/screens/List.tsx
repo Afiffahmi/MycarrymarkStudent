@@ -4,7 +4,7 @@ import { NavigationProp } from '@react-navigation/native';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import { Card } from 'react-native-paper'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { FAB } from 'react-native-paper';
+import { FAB,IconButton } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 
 interface RouterProps {
@@ -53,19 +53,22 @@ const List = ({navigation,route}: any) => {
   return (
     <View style={{paddingBottom:80}}>
         
-      <TextInput
-      style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-      onChangeText={text => setSearchTerm(text)}
-      value={searchTerm}
-      placeholder="Search"
-    />
-    <Button
-      title="Search"
-      onPress={() => {
-        const result = data.filter(item => item.courseCode.toLowerCase().includes(searchTerm.toLowerCase()));
-    setFilteredData(result);
-      }}
-    />
+        <View style={{ flexDirection: 'row', alignItems: 'center', margin: 5 }}>
+  <TextInput
+    style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 10, marginRight: 10, marginLeft:10 }}
+    onChangeText={text => setSearchTerm(text)}
+    value={searchTerm}
+    placeholder=" Search by Course Code"
+  />
+  <IconButton
+  style={{position:'absolute',right: 2}}
+    icon="magnify"
+    onPress={() => {
+      const result = data.filter(item => item.courseCode.toLowerCase().includes(searchTerm.toLowerCase()));
+      setFilteredData(result);
+    }}
+  />
+</View>
       <FlatList
   data={filteredData}
   keyExtractor={({ id }, index) => id}
@@ -75,8 +78,8 @@ const List = ({navigation,route}: any) => {
       <Card.Cover source={{ uri: item.selectedImage }} />
       <Card.Title title={item.courseCode} subtitle={item.courseName} titleVariant='titleMedium'/>
       <Card.Content>
-        <Text >{item.groupClass}</Text>
-        <Text>{item.lecturers[0].email}</Text>
+        <Text style={{color:'grey'}}>{item.groupClass}</Text>
+        <Text style={{color:'grey'}}>{item.lecturers[0].email}</Text>
       </Card.Content>
       
       <Card.Actions>
@@ -89,7 +92,7 @@ const List = ({navigation,route}: any) => {
     // Handle the case where the student is not found
     console.log('Student not found');
   }
-}} title='Open Details'/>
+}} title='View class'/>
       </Card.Actions>
     </Card>) : null
 
