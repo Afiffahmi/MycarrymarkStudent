@@ -10,7 +10,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Profile from './app/screens/Profile';
 import { Ionicons } from '@expo/vector-icons';
 import { Appbar } from 'react-native-paper';
-import { Image } from 'react-native';
+import { Image , ScrollView} from 'react-native';
 
 
 
