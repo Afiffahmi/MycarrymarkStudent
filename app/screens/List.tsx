@@ -1,4 +1,4 @@
-import { View, Text, Button, FlatList, TextInput } from 'react-native'
+import { View, Text,FlatList, TextInput } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { NavigationProp } from '@react-navigation/native';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
@@ -6,6 +6,8 @@ import { Card } from 'react-native-paper'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FAB,IconButton } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
+import JoinClass from './JoinClass';
 
 interface RouterProps {
     navigation : NavigationProp<any,any>;
@@ -50,8 +52,9 @@ const List = ({navigation,route}: any) => {
     },
   })
   const currentUser = user.email;
+  const dataWithCurrentUser = data.filter(item => item.students.some(student => student.email === currentUser));
   return (
-    <View style={{paddingBottom:80}}>
+    <View style={{paddingBottom:100}}>
         
         <View style={{ flexDirection: 'row', alignItems: 'center', margin: 5 }}>
   <TextInput
@@ -69,35 +72,42 @@ const List = ({navigation,route}: any) => {
     }}
   />
 </View>
-      <FlatList
-  data={filteredData}
-  keyExtractor={({ id }, index) => id}
-  renderItem={({ item }) => ( 
-    item.students.some(student => student.email === currentUser) ? (
-    <Card style={{margin: 15}}>
-      <Card.Cover source={{ uri: item.selectedImage }} />
-      <Card.Title title={item.courseCode} subtitle={item.courseName} titleVariant='titleMedium'/>
-      <Card.Content>
-        <Text style={{color:'grey'}}>{item.groupClass}</Text>
-        <Text style={{color:'grey'}}>{item.lecturers[0].email}</Text>
-      </Card.Content>
-      
-      <Card.Actions>
-      <Button onPress={() => {
-  const student = item.students.find(student => student.email === currentUser);
-  if (student) {
-    const studentId = student.studentid;
-    navigation.navigate('Details', {item, studentId});
-  } else {
-    // Handle the case where the student is not found
-    console.log('Student not found');
-  }
-}} title='View class'/>
-      </Card.Actions>
-    </Card>) : null
-
-  )}
-/>
+<Button onPress={() =>{
+  navigation.navigate('JoinClass', {user:user});
+  
+}}mode='elevated' elevation={2} icon='google-classroom' style={{marginHorizontal:10,marginTop:5}} buttonColor='#FF8080' textColor='white'>Join Class</Button>
+{dataWithCurrentUser.length === 0 ? (
+        <Text style={{alignItems:'center',textAlign:'center',top:'50%'}}>Please join class</Text>
+      ) : (
+        <FlatList
+          data={dataWithCurrentUser}
+          keyExtractor={({ id }, index) => id}
+          renderItem={({ item }) => (
+            <Card style={{margin: 15}}>
+              <Card.Cover source={{ uri: item.selectedImage }} />
+              <Card.Title title={item.courseCode} subtitle={item.courseName} titleVariant='titleMedium'/>
+              <Card.Content>
+                <Text style={{color:'grey'}}>{item.groupClass}</Text>
+                <Text style={{color:'grey'}}>{item.lecturers[0].email}</Text>
+              </Card.Content>
+              
+              <Card.Actions>
+              <Button onPress={() => {
+          const student = item.students.find(student => student.email === currentUser);
+          if (student) {
+            const studentId = student.studentid;
+            navigation.navigate('Details', {item, studentId});
+          } else {
+            // Handle the case where the student is not found
+            console.log('Student not found');
+          }
+        }} mode='text' icon='eye' >View Class</Button>
+              </Card.Actions>
+            </Card>
+          )}
+        />
+      )}
+    
     </View>
   )
 }
