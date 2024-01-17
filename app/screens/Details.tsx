@@ -96,7 +96,7 @@ const Details = ({ route, navigation }: any) => {
         style={{ margin: 5 }}
         value={value}
         onValueChange={setValue}
-        theme={{ colors: { secondaryContainer: 'pink' } }}
+        theme={{ colors: { secondaryContainer: '#FF8080', onSecondaryContainer:'white' } }}
         buttons={[
           {
             icon: "forum-outline",
