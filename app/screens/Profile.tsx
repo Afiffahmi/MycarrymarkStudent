@@ -16,6 +16,7 @@ const Profile = ({navigation,route}:any) => {
   return (
     <View style={styles.container}>
       <Card style={{width:'85%'}}>
+      
       <Text style={styles.name}>{user.email}</Text>
       <Text style={styles.email}>{user.email}</Text>
       <Button 
