@@ -54,7 +54,6 @@ function TabLayout({route}:any) {
   const user = route.params.user;
   return (
     <Tab.Navigator
-      initialRouteName='Home'
       screenOptions={{headerShown : false}}
     >
    <Tab.Screen 

@@ -6,6 +6,7 @@ import { Card, Button } from 'react-native-paper';
 import { NavigationProp } from '@react-navigation/native';
 import axios from 'axios';
 import { useEffect, useState } from 'react'
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface RouterProps {
   navigation : NavigationProp<any,any>;
@@ -41,6 +42,17 @@ const Profile = ({navigation,route}:any) => {
 
   return (
     <View style={styles.container}>
+      <Image source={{uri:'https://previews.123rf.com/images/mirquurius/mirquurius1703/mirquurius170300136/75166496-space-background-with-cosmic-objects-hand-drawn-vector-illustration.jpg'}} style={styles.wallpaperimage} />
+      <LinearGradient
+        colors={['transparent', 'purple']}
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: '50%',
+        }}
+      />
       <Image source={require('../../assets/logo.png')} style={{ width: 150, height: 80 , bottom: 50}} />
       <Card style={{width:'85%'}}>
       <Card.Title title="Student Profile" titleStyle={{textAlign:'center',fontSize:18,fontWeight:'500',color:'white'}}/>
@@ -75,6 +87,15 @@ const styles = StyleSheet.create({
   backgroundimage: {
     width: '100%',
     height: '40%',
+    zIndex: -1,
+    alignSelf: 'center',
+    position: 'absolute',
+    borderRadius: 15,
+  },
+
+  wallpaperimage: {
+    width: '100%',
+    height: '30%',
     zIndex: -1,
     alignSelf: 'center',
     position: 'absolute',

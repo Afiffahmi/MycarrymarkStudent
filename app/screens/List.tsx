@@ -8,6 +8,7 @@ import { FAB,IconButton } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import JoinClass from './JoinClass';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface RouterProps {
     navigation : NavigationProp<any,any>;
@@ -55,7 +56,16 @@ const List = ({navigation,route}: any) => {
   const dataWithCurrentUser = data.filter(item => item.students.some(student => student.email === currentUser));
   return (
     <View style={{paddingBottom:100}}>
-        
+        <LinearGradient
+        colors={['transparent', 'purple']}
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: '100%',
+        }}
+      />
         <View style={{ flexDirection: 'row', alignItems: 'center', margin: 5 }}>
   <TextInput
     style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 10, marginRight: 10, marginLeft:10 }}
