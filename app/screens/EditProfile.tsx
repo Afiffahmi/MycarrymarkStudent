@@ -21,7 +21,7 @@ type InputValues = {
 const EditProfile = ({route,navigation}:any) => {
   const [permission, requestPermission] = Camera.useCameraPermissions();
     const {user} = route.params;
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState('https://cvhrma.org/wp-content/uploads/2015/07/default-profile-photo.jpg');
     const [inputValues, setInputValues] = React.useState<InputValues>({
         name: '',
         studentid: '',

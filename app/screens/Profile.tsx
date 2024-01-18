@@ -1,9 +1,11 @@
-import { View, Text, Image, StyleSheet,Button } from 'react-native'
+import { View, Text, Image, StyleSheet } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import {FIREBASE_AUTH} from '../../FirebaseConfig';
-import { Card } from 'react-native-paper';
+import { Card, Button } from 'react-native-paper';
 import { NavigationProp } from '@react-navigation/native';
+import axios from 'axios';
+import { useEffect, useState } from 'react'
 
 interface RouterProps {
   navigation : NavigationProp<any,any>;
@@ -11,19 +13,47 @@ interface RouterProps {
 
 const Profile = ({navigation,route}:any) => {
   const {user} = route.params;
+  const [inputValues, setInputValues] = React.useState({
+    name: '',
+    studentid: '',
+    avatar: '',
+  })
+
+  React.useEffect(() => {
+    fetchData();
+    
+  }, []); 
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`https://mycarrymark-node-afiffahmis-projects.vercel.app/auth/${user.email}/studentprofile`);
+      const data = response.data;
+      setInputValues({
+        name: data.name,
+        studentid: data.studentid,
+        avatar: data.avatar,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 
   return (
     <View style={styles.container}>
+      <Image source={require('../../assets/logo.png')} style={{ width: 150, height: 80 , bottom: 50}} />
       <Card style={{width:'85%'}}>
-      
-      <Text style={styles.name}>{user.email}</Text>
+      <Card.Title title="Student Profile" titleStyle={{textAlign:'center',fontSize:18,fontWeight:'500',color:'white'}}/>
+      <Image style={styles.image} source={{ uri: inputValues.avatar || 'https://cvhrma.org/wp-content/uploads/2015/07/default-profile-photo.jpg'}} />
+      <Image style={styles.backgroundimage} source={{ uri: 'https://cdn.dribbble.com/users/1770290/screenshots/6183149/bg_79.gif' }} />
+      <Text style={styles.name}>{inputValues.name || ''}</Text>
+      <Text style={styles.email}>{inputValues.studentid || ''}</Text>
       <Text style={styles.email}>{user.email}</Text>
       <Button 
-  title="Edit Profile" 
+      icon='account-edit'
   onPress={() => navigation.navigate('EditProfile', { user: user })}
-/>
-      <Button title="Logout" onPress={() => {FIREBASE_AUTH.signOut()}} /></Card>
+>Edit Profile</Button>
+      <Button onPress={() => {FIREBASE_AUTH.signOut()}} icon='logout'>Logout</Button></Card>
     </View>
   )
 }
@@ -39,15 +69,26 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
+    alignSelf: 'center',
+    border: '5px solid white',
+  },
+  backgroundimage: {
+    width: '100%',
+    height: '40%',
+    zIndex: -1,
+    alignSelf: 'center',
+    position: 'absolute',
+    borderRadius: 15,
   },
   name: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
+    fontWeight: 'bold',
   },
   email: {
     textAlign: 'center',
-    color: '#333333',
+    color: 'grey',
     marginBottom: 5,
   },
 });
