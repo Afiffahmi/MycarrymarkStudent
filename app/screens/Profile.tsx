@@ -44,7 +44,7 @@ const Profile = ({navigation,route}:any) => {
     <View style={styles.container}>
       <Image source={{uri:'https://previews.123rf.com/images/mirquurius/mirquurius1703/mirquurius170300136/75166496-space-background-with-cosmic-objects-hand-drawn-vector-illustration.jpg'}} style={styles.wallpaperimage} />
       <LinearGradient
-        colors={['transparent', 'grey']}
+        colors={['transparent', 'purple']}
         style={{
           position: 'absolute',
           left: 0,
