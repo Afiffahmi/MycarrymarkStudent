@@ -21,7 +21,7 @@ type InputValues = {
 const EditProfile = ({route,navigation}:any) => {
   const [permission, requestPermission] = Camera.useCameraPermissions();
     const {user} = route.params;
-    const [image, setImage] = useState<string | null>(null);
+    const [image, setImage] = useState('');
     const [inputValues, setInputValues] = React.useState<InputValues>({
         name: '',
         studentid: '',
@@ -47,8 +47,7 @@ React.useEffect(() => {
         name: data.name,
         studentid: data.studentid,
       });
-
-      console.log(data);
+      setImage(data.avatar);
       setReload(false);
     } catch (error) {
       console.error(error);
@@ -67,6 +66,7 @@ React.useEffect(() => {
     
     if (!result.canceled) {
       setResult(result.assets[0]);
+      setImage(result.assets[0].uri);
       console.log(result);
     }
   };
@@ -80,40 +80,50 @@ React.useEffect(() => {
 
   const updateData = async () => {
 
-    try {
+    
+        try {
+          const formData = new FormData();
       
-      const formData = new FormData();
-      formData.append('filename',result.fileName ,result.uri );
-
-      Object.keys(inputValues).forEach(key => {
-        formData.append(key, inputValues[key]);
-      });
-  
+          if (result && result.uri) {
+            // If an image is selected, append image data to FormData
+            formData.append('filename', {
+              uri: result.uri,
+              name: result.fileName,
+              type: result.type,
+            } as any);
+          }
       
-      const formAction = `https://mycarrymark-node-afiffahmis-projects.vercel.app/auth/${email}/studentprofile`;
-      const formMethod = 'POST'; 
+          // Append other input values to FormData
+          Object.keys(inputValues).forEach((key) => {
+            formData.append(key, inputValues[key]);
+          });
       
-      fetch(formAction, {
-        method: formMethod,
-        body: formData,
-        
-      })
-        .then((response) => response.text())
-        .then((data) => {
-          console.log(data);
-          setSuccessful(true);
-      setReload(true);
-        })
-        .catch((error) => {
+          const formAction = `https://mycarrymark-node-afiffahmis-projects.vercel.app/auth/${email}/studentprofile`;
+          const formMethod = 'POST';
+      
+          fetch(formAction, {
+            method: formMethod,
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              setSuccessful(true);
+              setReload(true);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } catch (error) {
           console.error(error);
+        }
+      };
+   
 
-        });
+  
+  
 
-      
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    
   const onDismissSnackBar = () => setSuccessful(false);
 
 
@@ -123,7 +133,7 @@ React.useEffect(() => {
     <Appbar.Action icon='arrow-left' onPress={() => navigation.goBack()} />
     <Appbar.Content title="Edit Profile" />
     </Appbar.Header>
-    <Image source={{uri:inputValues.avatar}} style={{width: 100, height: 100, top:20,alignSelf:'center',borderRadius:50}}/>
+    <Image source={{uri:image}} style={{width: 100, height: 100, top:20,alignSelf:'center',borderRadius:50}}/>
     <View style={styles.container}>
       
     
