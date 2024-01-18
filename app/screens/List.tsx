@@ -57,7 +57,7 @@ const List = ({navigation,route}: any) => {
   return (
     <View style={{paddingBottom:100}}>
         <LinearGradient
-        colors={['transparent', 'purple']}
+        colors={['transparent', 'grey']}
         style={{
           position: 'absolute',
           left: 0,
@@ -85,7 +85,7 @@ const List = ({navigation,route}: any) => {
 <Button onPress={() =>{
   navigation.navigate('JoinClass', {user:user});
   
-}}mode='elevated' elevation={2} icon='google-classroom' style={{marginHorizontal:10,marginTop:5}} buttonColor='#FF8080' textColor='white'>Join Class</Button>
+}}mode='elevated' elevation={2} icon='google-classroom' style={{marginHorizontal:40,marginTop:5}} buttonColor='#FF8080' textColor='white'>Join Class</Button>
 {dataWithCurrentUser.length === 0 ? (
         <Text style={{alignItems:'center',textAlign:'center',top:'50%'}}>Please join class</Text>
       ) : (
