@@ -1,15 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {Text, TextInput, Button } from 'react-native-paper';
 import { View, StyleSheet,Image, SafeAreaView } from 'react-native';
 import { Banner,IconButton,MD3Colors } from 'react-native-paper';
+import { NavigationProp } from '@react-navigation/native';
+import axios from 'axios';
 
 const JoinClass = ({navigation,route}:any) => {
   const [classCode, setClassCode] = useState('');
   const [visible, setVisible] = React.useState(true);
+  const [message, setMessage] = React.useState('Please get the class code from your lecturer');
+  const [inputValues, setInputValues] = React.useState({
+    name: '',
+    studentid: '',
+    avatar: '',
+  })
+  const [data, setData] = useState({});
+  const {user} = route.params;
 
+  useEffect(() => {
+    fetchData();
+  },[])
   const handleJoin = () => {
-    // Handle the join class logic here
+    try{
+      if(classCode.length < 6 && classCode.length > 0){
+        setData({
+          email: user.email,
+          name: inputValues.name,
+          studentId: inputValues.studentid,
+          shordId: classCode,
+        })
+      const response = axios.post(`https://mycarrymark-node-afiffahmis-projects.vercel.app/class/${classCode}/join`,data)
+      .then((response) => {setMessage(response.data.message); if(message){
+        setVisible(true);
+      }})
+      }else if (!classCode){
+        setMessage('Please enter class code');
+        setVisible(true);
+      }else if(!inputValues.name || !inputValues.studentid || !user.email){
+        setMessage('Please edit your profile first');
+        setVisible(true);
+      }else if(classCode.length > 5){
+        setMessage('Class code only have 5 characters');
+        setVisible(true);
+      }
+    }catch(error){
+      console.log(error);
+    }
   }
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`https://mycarrymark-node-afiffahmis-projects.vercel.app/auth/${user.email}/studentprofile`);
+      const data = response.data;
+      setInputValues({
+        name: data.name,
+        studentid: data.studentid,
+        avatar: data.avatar,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -33,7 +84,7 @@ const JoinClass = ({navigation,route}:any) => {
         },
       ]}
       icon='information-outline'>
-      <Text style={{ lineHeight: 20, fontSize: 14 }}>Please get the class code from your lecturer</Text>
+      <Text style={{ lineHeight: 20, fontSize: 14 }}>{message}</Text>
     </Banner>
     <View style={styles.container}>
         

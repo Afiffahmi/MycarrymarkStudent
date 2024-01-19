@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, TextInput, Button, KeyboardAvoidingView } from 'react-native'
+import { View, StyleSheet, KeyboardAvoidingView, Image } from 'react-native'
 import React from 'react'
 import { FIREBASE_AUTH } from '../../FirebaseConfig'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-
+import { useNavigation } from '@react-navigation/native'
+import { Text,Button,TextInput } from 'react-native-paper'
 
 const Login = () => {
     const [email, setEmail] = React.useState('')
@@ -39,6 +40,8 @@ const signUp = async () => {
 }
   return (
     <View style={styles.container}>
+        <Image style={{width: 250, height: 90, alignSelf: 'center', bottom:30}} source={require('../../assets/logo.png')}/>
+        <Text style={{alignSelf:'center',fontSize:18,fontWeight:'200',bottom:20}}>Student view </Text>
         <KeyboardAvoidingView behavior='padding'>
       <TextInput
         style={styles.input}
@@ -55,8 +58,8 @@ const signUp = async () => {
         onChangeText={(text)=> setPassword(text)}></TextInput>
         
         {loading ? <Text>Loading...</Text> : <>
-        <Button title='Login' onPress={signIn}></Button>
-        <Button title='Create account' onPress={signUp}></Button>
+        <Button style={{top:10,marginHorizontal:20}} mode='contained' onPress={signIn} buttonColor='#FF8080'>Sign in</Button>
+        <Button style={{top:10}}  onPress={signUp} textColor='#963c3c'>Create an account</Button>
         </>}
         </KeyboardAvoidingView>
     </View>
@@ -67,15 +70,15 @@ export default Login
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 20,
+        
         flex: 1,
         justifyContent: 'center',
+        backgroundColor: '#fff',
     },
     input: {
+        marginHorizontal: 20,
         height: 50,
         marginVertical: 4,
-        borderWidth: 1,
-        padding: 10,
         borderRadius: 4,
         backgroundColor: '#fff',
     },

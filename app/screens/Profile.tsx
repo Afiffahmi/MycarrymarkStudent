@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, Alert } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import {FIREBASE_AUTH} from '../../FirebaseConfig';
@@ -7,6 +7,8 @@ import { NavigationProp } from '@react-navigation/native';
 import axios from 'axios';
 import { useEffect, useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
+import { useIsFocused } from '@react-navigation/native';
+
 
 interface RouterProps {
   navigation : NavigationProp<any,any>;
@@ -19,11 +21,15 @@ const Profile = ({navigation,route}:any) => {
     studentid: '',
     avatar: '',
   })
+  const isFocused = useIsFocused();
 
   React.useEffect(() => {
-    fetchData();
+    if (isFocused) {
+      fetchData();
+    }
     
-  }, []); 
+    
+  }, [isFocused]); 
 
   const fetchData = async () => {
     try {
@@ -39,10 +45,25 @@ const Profile = ({navigation,route}:any) => {
     }
   };
 
+  const showConfirmation = () => {
+    Alert.alert(
+      "Log Out",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => FIREBASE_AUTH.signOut() }
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <Image source={{uri:'https://previews.123rf.com/images/mirquurius/mirquurius1703/mirquurius170300136/75166496-space-background-with-cosmic-objects-hand-drawn-vector-illustration.jpg'}} style={styles.wallpaperimage} />
+     
       <LinearGradient
         colors={['transparent', 'purple']}
         style={{
@@ -64,7 +85,7 @@ const Profile = ({navigation,route}:any) => {
       icon='account-edit'
   onPress={() => navigation.navigate('EditProfile', { user: user })}
 >Edit Profile</Button>
-      <Button onPress={() => {FIREBASE_AUTH.signOut()}} icon='logout'>Logout</Button></Card>
+      <Button onPress={() => {showConfirmation()}} icon='logout'>Logout</Button></Card>
     </View>
   )
 }

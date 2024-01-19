@@ -5,10 +5,11 @@ import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import { Card } from 'react-native-paper'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FAB,IconButton } from 'react-native-paper';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 import JoinClass from './JoinClass';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useIsFocused } from '@react-navigation/native';
 
 interface RouterProps {
     navigation : NavigationProp<any,any>;
@@ -39,11 +40,12 @@ const List = ({navigation,route}: any) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState<Class[]>([]);
   const user = route.params.user;
+  const isFocused = useIsFocused();
   useEffect(() => {
+    if (isFocused) {
   fetch('https://mycarrymark-node-afiffahmis-projects.vercel.app/class/list')
     .then((response) => response.json()).then((json) => {setData(json);setFilteredData(json)});
-    console.log(user);
-  },[]);
+}},[isFocused]);
   const styles = StyleSheet.create({
     fab: {
       position: 'absolute',
@@ -55,19 +57,9 @@ const List = ({navigation,route}: any) => {
   const currentUser = user.email;
   const dataWithCurrentUser = data.filter(item => item.students.some(student => student.email === currentUser));
   return (
-    <View style={{paddingBottom:100}}>
-        <LinearGradient
-        colors={['transparent', 'grey']}
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: '100%',
-        }}
-      />
+    <View style={{paddingBottom:90}}>
         <View style={{ flexDirection: 'row', alignItems: 'center', margin: 5 }}>
-  <TextInput
+  {/* <TextInput
     style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1, borderRadius: 10, marginRight: 10, marginLeft:10 }}
     onChangeText={text => setSearchTerm(text)}
     value={searchTerm}
@@ -77,18 +69,25 @@ const List = ({navigation,route}: any) => {
   style={{position:'absolute',right: 2}}
     icon="magnify"
     onPress={() => {
-      const result = data.filter(item => item.courseCode.toLowerCase().includes(searchTerm.toLowerCase()));
+      const result = dataWithCurrentUser.filter(item => 
+        item.courseCode.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        item.students.some(student => student.email === currentUser)
+      );
       setFilteredData(result);
     }}
-  />
+  /> */}
 </View>
 <Button onPress={() =>{
   navigation.navigate('JoinClass', {user:user});
   
 }}mode='elevated' elevation={2} icon='google-classroom' style={{marginHorizontal:40,marginTop:5}} buttonColor='#FF8080' textColor='white'>Join Class</Button>
 {dataWithCurrentUser.length === 0 ? (
-        <Text style={{alignItems:'center',textAlign:'center',top:'50%'}}>Please join class</Text>
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Image source={{uri : 'https://static.thenounproject.com/png/1101094-200.png'}}/>
+          <Text>Please join class</Text>
+        </View>
       ) : (
+        <View>
         <FlatList
           data={dataWithCurrentUser}
           keyExtractor={({ id }, index) => id}
@@ -116,6 +115,19 @@ const List = ({navigation,route}: any) => {
             </Card>
           )}
         />
+        <LinearGradient
+        colors={['transparent', 'grey']}
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: -50,
+          height: '100%',
+          zIndex: -1,
+        }}
+      />
+        </View>
+        
       )}
     
     </View>

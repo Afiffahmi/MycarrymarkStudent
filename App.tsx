@@ -14,7 +14,8 @@ import { Image , ScrollView} from 'react-native';
 import EditProfile from './app/screens/EditProfile';
 import JoinClass from './app/screens/JoinClass';
 import { Text } from 'react-native-paper';
-
+import Forum from './app/screens/Forum';
+import Messages from './app/screens/Messages';
 
 
 
@@ -35,6 +36,8 @@ function InsideLayout({route}:any) {
       <InsideStack.Screen name="List" component={List} initialParams={{user: user}} options={{headerShown:false}}/>
       <InsideStack.Screen name="Details" component={Details} options={{headerShown:false}}/>
       <InsideStack.Screen name="JoinClass" component={JoinClass} initialParams={{user:user}} options={{headerShown:false}}/>
+      <InsideStack.Screen name="Forum" component={Forum} options={{headerShown:false}}/>
+      <InsideStack.Screen name="Messages" component={Messages} options={{headerShown:false}}/>
     </InsideStack.Navigator></>
     
   );

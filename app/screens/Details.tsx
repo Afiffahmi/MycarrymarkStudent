@@ -1,9 +1,9 @@
-import { View, Text, SafeAreaView } from "react-native";
+import { View, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Button, ImageBackground, StyleSheet } from "react-native";
-import { DataTable, IconButton, MD3Colors } from "react-native-paper";
+import { ImageBackground, StyleSheet } from "react-native";
+import { DataTable, IconButton, MD3Colors, Modal, Portal, Text, Button, PaperProvider, Icon, Snackbar } from "react-native-paper";
 import { SegmentedButtons } from "react-native-paper";
-import { BottomTabBar } from "@react-navigation/bottom-tabs";
+import axios from "axios";
 
 type Assessment = {
   score: string;
@@ -40,6 +40,13 @@ type Data = {
   student: StudentItem[];
 };
 
+interface Performance {
+  averageGrade: number;
+  totalWeighted: number;
+  totalWeightedAll: number;
+  performanceRating : number;
+}
+
 const Details = ({ route, navigation }: any) => {
   const [data, setData] = useState<Data>({
     grading: [],
@@ -52,8 +59,19 @@ const Details = ({ route, navigation }: any) => {
     numberOfItemsPerPageList[0]
   );
   const [value, setValue] = useState("");
+  const [visible, setVisible] = React.useState(false);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const hideGpModal = () => setGpVisible(false);
+
   const { item } = route.params;
   const { studentId } = route.params;
+  const [performance, setPerformance] = useState<Performance>({averageGrade:0.0,totalWeighted:0,totalWeightedAll:0,performanceRating:0.0});
+  const [grades, setGrades] = useState<{ [key: string]: any }>({});
+  const[prediction,setPrediction] = useState<any>(null);
+  const [gpMessage, setGpMessage] = useState<string>('We re processing your prediction!');
+  const [gpVisible, setGpVisible] = useState<boolean>(false);
 
   useEffect(() => {
     fetch(
@@ -63,13 +81,105 @@ const Details = ({ route, navigation }: any) => {
       .then((json) => {
         setData(json);
       });
-  }, []);
+      data.grading.forEach((grading) => {
+        if (studentId === grading.studentId) {
+          const total = grading.grades.reduce((total, grade) => total + Number(grade.grade), 0);
+          let newGrades: { [key: string]: any } = {
+            'student_id': studentId,
+            'test1': 0,
+            'test2': 0,
+            'assignment1': 0,
+            'assignment2': 0,
+            'quiz1': 0,
+            'carrymark': total,
+           
+          };
+          grading.grades.forEach((grade) => {
+            newGrades[grade.assessmentName] = grade.grade;
+          });
+          setGrades(newGrades);
+        }
+      });
+      fetchPerformance();
+  }, [data,studentId]);
+
+  const fetchPerformance = async () => {
+    try{
+      const response = await fetch( `https://mycarrymark-node-afiffahmis-projects.vercel.app/class/${item.id}/average-grade`);
+      const data = await response.json();
+      setPerformance(data);
+    }catch(e){
+      console.error('Error:', e);
+    }
+  }
+  const onDismissSnackBar = () => setGpVisible(false);
+
+  
+  const gradePrediction = async () => {
+    setGrades(prevGrades => {
+      return {...prevGrades, student_id: studentId,};
+    });
+    try{
+      setGpVisible(true);
+      const gradesArray = [grades];
+      const response = await axios.post( `https://grade-prediction-api.onrender.com/predict`,gradesArray)
+      .then((response) => {
+        setPrediction(response.data.Predictions[0].Prediction);
+        console.log(response.data.Predictions[0].Prediction)
+      });
+    }catch(e){
+      console.error('Error:', e);
+    }
+  }
+
 
   const from = page * itemsPerPage;
   const to = Math.min((page + 1) * itemsPerPage, item.length);
 
   return (
     <SafeAreaView style={styles.container}>
+      <PaperProvider>
+      <Portal>
+      <Modal visible={gpVisible} onDismiss={hideGpModal} contentContainerStyle={container2Style}>
+          <View style={{justifyContent:'space-between',alignSelf:'center',alignItems:'center',alignContent:'center'}}>
+            <Text>Your Prediction Grade</Text>
+          <Text style={{fontSize:20,fontWeight:'bold'}}>{prediction}</Text>
+          <Text>This only prediction, your result still based on yourself during final examination</Text>
+          </View>
+        </Modal>
+        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+          <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+            <DataTable>
+              <DataTable.Header>
+                <DataTable.Title>Class Performance</DataTable.Title>
+                <DataTable.Title numeric>Score</DataTable.Title>
+              </DataTable.Header>
+              <DataTable.Row>
+                <DataTable.Cell>Average Grade</DataTable.Cell>
+                <DataTable.Cell numeric>{Number(performance.averageGrade).toFixed(2)}%</DataTable.Cell>
+              </DataTable.Row>
+              <DataTable.Row
+              >
+                <DataTable.Cell>Total Carrymark</DataTable.Cell>
+                <DataTable.Cell numeric>{Number(performance.totalWeighted)}%</DataTable.Cell>
+              </DataTable.Row>
+              <DataTable.Row
+              style={{
+                backgroundColor: "pink",
+                padding: 15,
+                position: "relative",
+              }}>
+                <Icon source='star' color='yellow' size={20} />
+                <DataTable.Cell>Performance Rating</DataTable.Cell>
+                <DataTable.Cell numeric>{Number(performance.performanceRating).toFixed(2)} /10</DataTable.Cell>
+              </DataTable.Row>
+              <Text style={{top:10,color:'grey'}}>Tap anywhere to dismiss.</Text>
+            </DataTable>
+         
+         
+          </View>
+        </Modal>
+      </Portal>
       <ImageBackground
         source={{ uri: item.selectedImage }}
         style={styles.image}
@@ -102,15 +212,24 @@ const Details = ({ route, navigation }: any) => {
             icon: "forum-outline",
             value: "Forum",
             label: "Forum",
-            onPress: () => console.log("Forum pressed"),
+            onPress: () => navigation.navigate('Forum',{item}),
           },
           {
             icon: "chart-bar",
             value: "Performance",
             label: "Performance",
-            onPress: () => console.log("Performance pressed"),
+            onPress: () => showModal(),
           },
-        ]}
+          
+          ...(item.predictive ? [{
+    icon: "chart-areaspline",
+    value: "Grade Prediction",
+    label: "Prediction",
+    onPress: () => gradePrediction(),
+  }] : [])
+]}
+          
+        
       />
       <DataTable>
         <DataTable.Header>
@@ -120,17 +239,20 @@ const Details = ({ route, navigation }: any) => {
 
         {data.grading.map((grading, index) =>
           studentId === grading.studentId ? (
+            
             <>
-              {grading.grades.map((grade, gradeIndex) => (
+              {grading.grades.map((grade, gradeIndex) => {
+                
+                return (
                 <DataTable.Row key={gradeIndex}>
                   <DataTable.Cell style={{ left: 20 }}>
                     {grade.assessmentName}
                   </DataTable.Cell>
                   <DataTable.Cell numeric style={{ right: 20 }}>
-                    {grade.grade}
+                    {grade.grade} 
                   </DataTable.Cell>
-                </DataTable.Row>
-              ))}
+                </DataTable.Row>);
+})}
               <DataTable.Row
                 style={{
                   backgroundColor: "lightgrey",
@@ -150,6 +272,7 @@ const Details = ({ route, navigation }: any) => {
                       0
                     )}
                     %
+                    
                   </Text>
                 </DataTable.Cell>
               </DataTable.Row>
@@ -157,10 +280,23 @@ const Details = ({ route, navigation }: any) => {
           ) : null
         )}
       </DataTable>
+      <Snackbar
+        visible={gpVisible}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: 'Undo',
+          onPress: () => {
+            // Do something
+          },
+        }}>
+        {gpMessage}
+      </Snackbar>
+      </PaperProvider>
     </SafeAreaView>
   );
 };
-
+const containerStyle = {backgroundColor: 'white', padding: 20, borderRadius: 10, margin:5};
+const container2Style = {backgroundColor: 'white', padding: 20, borderRadius: 10,margin:20};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
