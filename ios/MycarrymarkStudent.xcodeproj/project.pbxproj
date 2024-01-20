@@ -14,7 +14,7 @@
 		96905EF65AED1B983A6B3ABC /* libPods-MycarrymarkStudent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-MycarrymarkStudent.a */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		D08C06A59BBD410581053D63 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A7595C99864F6EB4CB8A6F /* noop-file.swift */; };
+		4F579D26E33B4394AC30C839 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E3A1D6A1904F95B8938096 /* noop-file.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,8 +31,8 @@
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-MycarrymarkStudent/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		03A7595C99864F6EB4CB8A6F /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "MycarrymarkStudent/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
-		892EDA7244DB4A9CA28C7F40 /* MycarrymarkStudent-Bridging-Header.h */ = {isa = PBXFileReference; name = "MycarrymarkStudent-Bridging-Header.h"; path = "MycarrymarkStudent/MycarrymarkStudent-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		23E3A1D6A1904F95B8938096 /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "MycarrymarkStudent/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
+		5EA6F0CF4A954E1B96D2DED7 /* MycarrymarkStudent-Bridging-Header.h */ = {isa = PBXFileReference; name = "MycarrymarkStudent-Bridging-Header.h"; path = "MycarrymarkStudent/MycarrymarkStudent-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,8 +57,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				03A7595C99864F6EB4CB8A6F /* noop-file.swift */,
-				892EDA7244DB4A9CA28C7F40 /* MycarrymarkStudent-Bridging-Header.h */,
+				23E3A1D6A1904F95B8938096 /* noop-file.swift */,
+				5EA6F0CF4A954E1B96D2DED7 /* MycarrymarkStudent-Bridging-Header.h */,
 			);
 			name = MycarrymarkStudent;
 			sourceTree = "<group>";
@@ -199,7 +199,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				EE5C84BF54B24342863D90B0 /* MycarrymarkStudent-Bridging-Header.h in Resources */,
+				3A1E31EF16D34F0FBB1F6637 /* MycarrymarkStudent-Bridging-Header.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,7 +293,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				D08C06A59BBD410581053D63 /* noop-file.swift in Sources */,
+				4F579D26E33B4394AC30C839 /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

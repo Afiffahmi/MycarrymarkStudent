@@ -5,6 +5,7 @@ import { NavigationProp } from '@react-navigation/native';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera, CameraType } from 'expo-camera';
+import { Platform } from 'react-native';
 
 
 
@@ -29,7 +30,7 @@ const EditProfile = ({route,navigation}:any) => {
 const [email, setEmail] = useState(user.email);
 const[reload,setReload] = useState(false);
 const [successful, setSuccessful] = useState(false);
-const [result, setResult] = useState<any>(null);
+const [result, setResult] = useState('');
 
 React.useEffect(() => {
     fetchData();
@@ -55,6 +56,7 @@ React.useEffect(() => {
   };
 
   const selectImage = async () => {
+    await ImagePicker.requestMediaLibraryPermissionsAsync();
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -65,9 +67,10 @@ React.useEffect(() => {
     
     
     if (!result.canceled) {
-      setResult(result.assets[0]);
-      setImage(result.assets[0].uri);
+      setResult(result.assets[0].uri);
+      
       console.log(result);
+      setImage(result.assets[0].uri);
     }
   };
 
@@ -80,19 +83,24 @@ React.useEffect(() => {
 
   const updateData = async () => {
 
-    
+
+ 
         try {
           const formData = new FormData();
       
-          if (result && result.uri) {
+          if (result) {
             // If an image is selected, append image data to FormData
+
+          
+            
+          
             formData.append('filename', {
-              uri: result.uri,
-              name: result.fileName,
-              type: result.type,
+              uri: result,
+              name: 'profile.jpg',
+              type: 'image/jpg',
             } as any);
           }
-      
+
           // Append other input values to FormData
           Object.keys(inputValues).forEach((key) => {
             formData.append(key, inputValues[key]);
@@ -104,6 +112,9 @@ React.useEffect(() => {
           fetch(formAction, {
             method: formMethod,
             body: formData,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
           })
             .then((response) => response.json())
             .then((data) => {

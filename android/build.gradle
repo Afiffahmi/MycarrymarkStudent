@@ -17,8 +17,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath('com.android.tools.build:gradle:3.2.1')
-        implementation 'com.facebook.react:react-native:+'
+        classpath('com.android.tools.build:gradle:7.4.2')
+        classpath('com.facebook.react:react-native-gradle-plugin')
     }
 }
 
@@ -38,23 +38,6 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
     }
 }
-subprojects {
-    afterEvaluate {project ->
-        if (project.hasProperty("android")) {
-            android {
-                compileSdkVersion 26
-                buildToolsVersion '26.0.3'
-            }
-        //added begin
-            dependencies {
-                compile "com.android.support:support-core-utils:25.1.0"
-                implementation 'com.facebook.react:react-native:+'
-            }
-        //added end
-        }
-    }
-}
-
 // @generated begin expo-camera-import - expo prebuild (DO NOT MODIFY) sync-f244f4f3d8bf7229102e8f992b525b8602c74770
 def expoCameraMavenPath = new File(["node", "--print", "require.resolve('expo-camera/package.json')"].execute(null, rootDir).text.trim(), "../android/maven")
 allprojects { repositories { maven { url(expoCameraMavenPath) } } }
