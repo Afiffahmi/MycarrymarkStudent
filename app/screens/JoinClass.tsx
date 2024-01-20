@@ -4,6 +4,8 @@ import { View, StyleSheet,Image, SafeAreaView } from 'react-native';
 import { Banner,IconButton,MD3Colors } from 'react-native-paper';
 import { NavigationProp } from '@react-navigation/native';
 import axios from 'axios';
+import { ActivityIndicator } from 'react-native';
+
 
 const JoinClass = ({navigation,route}:any) => {
   const [classCode, setClassCode] = useState('');
@@ -14,13 +16,15 @@ const JoinClass = ({navigation,route}:any) => {
     studentid: '',
     avatar: '',
   })
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({});
   const {user} = route.params;
 
   useEffect(() => {
     fetchData();
   },[])
-  const handleJoin = () => {
+  const handleJoin = async () => {
+    setLoading(true);
     try{
       if(classCode.length < 6 && classCode.length > 0){
         setData({
@@ -29,10 +33,13 @@ const JoinClass = ({navigation,route}:any) => {
           studentId: inputValues.studentid,
           shordId: classCode,
         })
-      const response = axios.post(`https://mycarrymark-node-afiffahmis-projects.vercel.app/class/${classCode}/join`,data)
-      .then((response) => {setMessage(response.data.message); if(message){
+      const response = await axios.post(`https://mycarrymark-node-afiffahmis-projects.vercel.app/class/${classCode}/join`,data)
+      .then((response) => {setMessage(response.data.message)
+        
+       }).then(() => {
         setVisible(true);
-      }})
+        setLoading(false);
+      })
       }else if (!classCode){
         setMessage('Please enter class code');
         setVisible(true);
@@ -64,7 +71,14 @@ const JoinClass = ({navigation,route}:any) => {
 
   return (
     <SafeAreaView>
+      {loading ? (
+  <View style={{ height:'100%',position: 'absolute', top: 60, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1 }}>
+    
+    <ActivityIndicator size="large" color="#0000ff" />
+  </View>
+) : null}
               <View style={{flexDirection: 'row',position:'absolute'}}>
+              
       <IconButton
   icon="arrow-left"
   iconColor={MD3Colors.tertiary80}

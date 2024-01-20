@@ -6,6 +6,7 @@ import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera, CameraType } from 'expo-camera';
 import { Platform } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
 
 
@@ -31,6 +32,7 @@ const [email, setEmail] = useState(user.email);
 const[reload,setReload] = useState(false);
 const [successful, setSuccessful] = useState(false);
 const [result, setResult] = useState('');
+const [loading, setLoading] = useState(false);
 
 React.useEffect(() => {
     fetchData();
@@ -82,7 +84,7 @@ React.useEffect(() => {
   };
 
   const updateData = async () => {
-
+    setLoading(true);
 
  
         try {
@@ -119,6 +121,7 @@ React.useEffect(() => {
             .then((response) => response.json())
             .then((data) => {
               console.log(data);
+              setLoading(false);
               setSuccessful(true);
               setReload(true);
             })
@@ -140,10 +143,18 @@ React.useEffect(() => {
 
   return (
     <View>
+    
     <Appbar.Header>
     <Appbar.Action icon='arrow-left' onPress={() => navigation.goBack()} />
     <Appbar.Content title="Edit Profile" />
     </Appbar.Header>
+    {loading ? (
+  <View style={{ height:'100%',position: 'absolute', top: 60, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1,backgroundColor:'rgba(0, 0, 0, 0.3)' }}>
+    
+    <ActivityIndicator size="large" color="#0000ff" />
+  </View>
+) : null}
+    <View>
     <Image source={{uri:image}} style={{width: 100, height: 100, top:20,alignSelf:'center',borderRadius:50}}/>
     <View style={styles.container}>
       
@@ -179,7 +190,7 @@ React.useEffect(() => {
     </View>
     <Snackbar
         visible={successful}
-        style={{backgroundColor:'#FF8080',position:'relative',top:0}}
+        style={{backgroundColor:'#FF8080',position:'absolute',top:0,zIndex:15,width:'80%', marginHorizontal:20,alignSelf:'center'}}
         onDismiss={onDismissSnackBar}
         action={{
           label: 'Close',
@@ -189,6 +200,9 @@ React.useEffect(() => {
         }}>
         Profile Successfully Updated.
       </Snackbar>
+    </View>
+
+    
     </View>
   )
 }

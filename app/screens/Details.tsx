@@ -4,6 +4,7 @@ import { ImageBackground, StyleSheet } from "react-native";
 import { DataTable, IconButton, MD3Colors, Modal, Portal, Text, Button, PaperProvider, Icon, Snackbar } from "react-native-paper";
 import { SegmentedButtons } from "react-native-paper";
 import axios from "axios";
+import { ActivityIndicator } from "react-native";
 
 type Assessment = {
   score: string;
@@ -72,6 +73,7 @@ const Details = ({ route, navigation }: any) => {
   const[prediction,setPrediction] = useState<any>(null);
   const [gpMessage, setGpMessage] = useState<string>('We re processing your prediction!');
   const [gpVisible, setGpVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetch(
@@ -116,14 +118,17 @@ const Details = ({ route, navigation }: any) => {
 
   
   const gradePrediction = async () => {
+    setLoading(true);
     setGrades(prevGrades => {
       return {...prevGrades, student_id: studentId,};
     });
     try{
-      setGpVisible(true);
+      
       const gradesArray = [grades];
       const response = await axios.post( `https://grade-prediction-api.onrender.com/predict`,gradesArray)
       .then((response) => {
+        setGpVisible(true);
+        setLoading(false);
         setPrediction(response.data.Predictions[0].Prediction);
         console.log(response.data.Predictions[0].Prediction)
       });
@@ -138,6 +143,13 @@ const Details = ({ route, navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {loading ? (
+  <View style={{ height:'100%',position: 'absolute', top: 60, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1}}>
+    
+    <ActivityIndicator size="large" color="#0000ff" />
+    <Text>It may takes some times for first time..</Text>
+  </View>
+) : null}
       <PaperProvider>
       <Portal>
       <Modal visible={gpVisible} onDismiss={hideGpModal} contentContainerStyle={container2Style}>

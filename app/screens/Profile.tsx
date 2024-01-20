@@ -63,7 +63,14 @@ const Profile = ({navigation,route}:any) => {
 
   return (
     <View style={styles.container}>
-     
+     <View style={styles.wallpaperimage}>
+        <Image
+          style={styles.wallpaperimage}
+          source={{
+            uri: 'https://i.pinimg.com/736x/15/f3/b7/15f3b78286f1c42774771d7d582b648c.jpg',
+          }}
+        />
+      </View>
       <LinearGradient
         colors={['transparent', 'purple']}
         style={{
@@ -72,6 +79,7 @@ const Profile = ({navigation,route}:any) => {
           right: 0,
           bottom: 0,
           height: '40%',
+          zIndex: -1,
         }}
       />
       <Card style={{width:'85%'}}>
@@ -115,7 +123,7 @@ const styles = StyleSheet.create({
 
   wallpaperimage: {
     width: '100%',
-    height: '45%',
+    height: '100%',
     top: 0,
     zIndex: -1,
     position: 'absolute',

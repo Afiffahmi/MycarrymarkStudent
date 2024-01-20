@@ -10,6 +10,7 @@ import { Button } from 'react-native-paper';
 import JoinClass from './JoinClass';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useIsFocused } from '@react-navigation/native';
+import { ActivityIndicator } from 'react-native';
 
 interface RouterProps {
     navigation : NavigationProp<any,any>;
@@ -41,10 +42,12 @@ const List = ({navigation,route}: any) => {
   const [filteredData, setFilteredData] = useState<Class[]>([]);
   const user = route.params.user;
   const isFocused = useIsFocused();
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true);
     if (isFocused) {
   fetch('https://mycarrymark-node-afiffahmis-projects.vercel.app/class/list')
-    .then((response) => response.json()).then((json) => {setData(json);setFilteredData(json)});
+    .then((response) => response.json()).then((json) => {setData(json);setFilteredData(json);setLoading(false);});
 }},[isFocused]);
   const styles = StyleSheet.create({
     fab: {
@@ -77,6 +80,12 @@ const List = ({navigation,route}: any) => {
     }}
   /> */}
 </View>
+{loading ? (
+  <View style={{ height:'100%',position: 'absolute', top: 60, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1 }}>
+    
+    <ActivityIndicator size="large" color="#0000ff" />
+  </View>
+) : null}
 <Button onPress={() =>{
   navigation.navigate('JoinClass', {user:user});
   
@@ -115,17 +124,6 @@ const List = ({navigation,route}: any) => {
             </Card>
           )}
         />
-        <LinearGradient
-        colors={['transparent', 'grey']}
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: -50,
-          height: '100%',
-          zIndex: -1,
-        }}
-      />
         </View>
         
       )}
