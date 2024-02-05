@@ -161,7 +161,7 @@ React.useEffect(() => {
     
       
     <Button onPress={selectImage} >Select Image</Button>
-
+    <Text style={styles.label}>Full Name</Text>
     <TextInput
   placeholder='Enter your name'
   style={styles.input}
@@ -171,7 +171,7 @@ React.useEffect(() => {
 
       <Text style={styles.label}>Student ID</Text>
       <TextInput
-  placeholder='Enter your name'
+  placeholder='Enter your Student ID'
   style={styles.input}
   value={inputValues.studentid}
   onChangeText={(text: string) => handleInputChange('studentid', text)}

@@ -2,7 +2,6 @@ import React, { useState,useEffect } from 'react';
 import {Text, TextInput, Button } from 'react-native-paper';
 import { View, StyleSheet,Image, SafeAreaView } from 'react-native';
 import { Banner,IconButton,MD3Colors } from 'react-native-paper';
-import { NavigationProp } from '@react-navigation/native';
 import axios from 'axios';
 import { ActivityIndicator } from 'react-native';
 
@@ -39,9 +38,12 @@ const JoinClass = ({navigation,route}:any) => {
           `https://mycarrymark-node-afiffahmis-projects.vercel.app/class/${classCode}/join`,
           data
         );
+  
         setMessage(response.data.message);
         setVisible(true);
-        console.log(response.data);
+      }else if (classCode.length > 5){
+        setMessage('Class code only have 5 letters');
+        setVisible(true);
       }
     } catch (error) {
       console.log(error);

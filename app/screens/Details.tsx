@@ -83,7 +83,7 @@ const Details = ({ route, navigation }: any) => {
       .then((json) => {
         setData(json);
       });
-      data.grading.forEach((grading) => {
+      {data.grading && data.grading.forEach((grading) => {
         if (studentId === grading.studentId) {
           const total = grading.grades.reduce((total, grade) => total + Number(grade.grade), 0);
           let newGrades: { [key: string]: any } = {
@@ -101,7 +101,7 @@ const Details = ({ route, navigation }: any) => {
           });
           setGrades(newGrades);
         }
-      });
+      })};
       fetchPerformance();
   }, [data,studentId]);
 
@@ -249,11 +249,11 @@ const Details = ({ route, navigation }: any) => {
           <DataTable.Title numeric>Carrymark(%)</DataTable.Title>
         </DataTable.Header>
 
-        {data.grading.map((grading, index) =>
+        {data.grading && data.grading.map((grading, index) =>
           studentId === grading.studentId ? (
             
             <>
-              {grading.grades.map((grade, gradeIndex) => {
+              {grading.grades && grading.grades.map((grade, gradeIndex) => {
                 
                 return (
                 <DataTable.Row key={gradeIndex}>
