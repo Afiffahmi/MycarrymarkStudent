@@ -23,37 +23,32 @@ const JoinClass = ({navigation,route}:any) => {
   useEffect(() => {
     fetchData();
   },[])
+
   const handleJoin = async () => {
     setLoading(true);
-    try{
-      if(classCode.length < 6 && classCode.length > 0){
-        setData({
+    try {
+      if (classCode.length < 6 && classCode.length > 0) {
+        const data = {
           email: user.email,
           name: inputValues.name,
           studentId: inputValues.studentid,
           shordId: classCode,
-        })
-      const response = await axios.post(`https://mycarrymark-node-afiffahmis-projects.vercel.app/class/${classCode}/join`,data)
-      .then((response) => {setMessage(response.data.message)
-        
-       }).then(() => {
+        };
+  
+        const response = await axios.post(
+          `https://mycarrymark-node-afiffahmis-projects.vercel.app/class/${classCode}/join`,
+          data
+        );
+        setMessage(response.data.message);
         setVisible(true);
-        setLoading(false);
-      })
-      }else if (!classCode){
-        setMessage('Please enter class code');
-        setVisible(true);
-      }else if(!inputValues.name || !inputValues.studentid || !user.email){
-        setMessage('Please edit your profile first');
-        setVisible(true);
-      }else if(classCode.length > 5){
-        setMessage('Class code only have 5 characters');
-        setVisible(true);
+        console.log(response.data);
       }
-    }catch(error){
+    } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   const fetchData = async () => {
     try {
